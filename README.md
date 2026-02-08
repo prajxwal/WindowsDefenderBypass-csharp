@@ -12,6 +12,7 @@ An advanced Windows Defender bypass tool designed for educational purposes and s
 - **PowerShell-based Configuration**: Uses PowerShell cmdlets to disable Defender preferences
 - **AMSI Bypass**: Attempts to bypass Anti-Malware Scan Interface (AMSI) protection
 - **ETW Bypass**: Attempts to bypass Event Tracing for Windows (ETW) telemetry
+- **Polymorphic Patches**: Generates functionally equivalent but bytecode-different patches at runtime to evade signature detection
 - **Exclusion Management**: Automatically adds common exclusion paths, processes, and file extensions
 - **Status Checking**: Verify current Windows Defender configuration state
 - **Restore Functionality**: Re-enable Windows Defender settings (useful for cleanup)
@@ -118,6 +119,7 @@ The project is organized into modular components:
 - **RegistryManager.cs**: Registry modification operations
 - **AMSIBypass.cs**: Anti-Malware Scan Interface bypass implementation
 - **ETWBypass.cs**: Event Tracing for Windows bypass implementation
+- **PolymorphicPatchGenerator.cs**: Runtime generation of equivalent patch variants for evasion
 - **ExclusionManager.cs**: Exclusion path, process, and extension management
 - **StatusChecker.cs**: Defender status verification
 - **SecurityHelper.cs**: Security and privilege management utilities
@@ -130,6 +132,16 @@ The tool attempts to patch the `AmsiScanBuffer` function in `amsi.dll` to return
 
 ### ETW Bypass
 The tool patches the `EtwEventWrite` function in `ntdll.dll` to prevent Event Tracing for Windows telemetry from being sent.
+
+### Polymorphic Patches
+To evade signature-based detection, the tool generates different but functionally equivalent patches at runtime:
+
+| Target | Variants | Techniques |
+|--------|----------|------------|
+| AMSI | 6 | `xor eax,eax`, `mov eax,imm`, `sub eax,eax`, split arithmetic, junk instructions, NOP sleds |
+| ETW | 5 | Simple `ret`, NOP prefix, push/pop, `xor eax,eax; ret`, random NOP sleds |
+
+Each execution randomly selects a different patch variant, making static byte-sequence signatures ineffective.
 
 ### Registry Modifications
 - `HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\DisableAntiSpyware`
